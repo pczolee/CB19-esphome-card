@@ -1,7 +1,7 @@
 # CB19 ESPHome Card 🚀
 
 [![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz)
-[![Version](https://img.shields.io/github/v/release/szokezoltan95/CB19-esphome-card)](https://github.com/szokezoltan95/CB19-esphome-card/releases)
+[![Version](https://img.shields.io/github/v/release/pczolee/CB19-esphome-card)](https://github.com/pczolee/CB19-esphome-card/releases)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 A clean, compact and highly configurable Home Assistant Lovelace card for visualizing and controlling a dual-wing gate driven by a custom CB19 ESPHome firmware.
@@ -59,7 +59,7 @@ It depends on custom entities (motor positions, states, etc.).
 
 1. HACS → Frontend  
 2. Add custom repo:  
-   https://github.com/szokezoltan95/CB19-esphome-card  
+   https://github.com/pczolee/CB19-esphome-card  
 3. Category: Dashboard  
 4. Install  
 5. Reload Home Assistant  
@@ -134,8 +134,32 @@ controller: cb19_gate
 | show_close | Show close button |
 | show_pedestrian | `auto / true / false` |
 | available_action_tint | Highlight allowed actions |
+| confirmation.open | Ask for confirmation before full opening |
+| confirmation.close | Ask for confirmation before closing |
+| confirmation.pedestrian | Ask for confirmation before pedestrian opening |
+| confirmation.open_text | Custom confirmation text for opening |
+| confirmation.close_text | Custom confirmation text for closing |
+| confirmation.pedestrian_text | Custom confirmation text for pedestrian opening |
 
 ---
+
+### ✅ Action confirmation
+
+Confirmation prompts are optional and disabled by default for backward compatibility.
+
+```yaml
+ui:
+  controls:
+    confirmation:
+      open: true
+      close: true
+      pedestrian: true
+      open_text: "Are you sure you want to open the gate?"
+      close_text: "Are you sure you want to close the gate?"
+      pedestrian_text: "Are you sure you want to open the gate in pedestrian mode?"
+```
+
+The **Stop** action never asks for confirmation so it remains immediately available.
 
 ### 🎨 Icons
 
@@ -223,6 +247,13 @@ ui:
     show_close: true
     show_pedestrian: auto
     available_action_tint: true
+    confirmation:
+      open: true
+      close: true
+      pedestrian: true
+      open_text: "Are you sure you want to open the gate?"
+      close_text: "Are you sure you want to close the gate?"
+      pedestrian_text: "Are you sure you want to open the gate in pedestrian mode?"
   icons:
     open: mdi:arrow-expand-horizontal
     stop: mdi:stop
