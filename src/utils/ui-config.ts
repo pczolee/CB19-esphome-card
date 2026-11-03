@@ -22,6 +22,14 @@ export const DEFAULT_UI_CONFIG: CardUiConfig = {
     show_close: true,
     show_pedestrian: "auto",
     available_action_tint: true,
+    confirmation: {
+      open: false,
+      close: false,
+      pedestrian: false,
+      open_text: "Are you sure you want to open the gate?",
+      close_text: "Are you sure you want to close the gate?",
+      pedestrian_text: "Are you sure you want to open the gate in pedestrian mode?",
+    },
   },
 
   icons: {
@@ -134,6 +142,26 @@ export function resolveUiConfig(config: Cb19GateCardConfig): CardUiConfig {
       available_action_tint:
         ui.controls?.available_action_tint ??
         DEFAULT_UI_CONFIG.controls.available_action_tint,
+      confirmation: {
+        open:
+          ui.controls?.confirmation?.open ??
+          DEFAULT_UI_CONFIG.controls.confirmation.open,
+        close:
+          ui.controls?.confirmation?.close ??
+          DEFAULT_UI_CONFIG.controls.confirmation.close,
+        pedestrian:
+          ui.controls?.confirmation?.pedestrian ??
+          DEFAULT_UI_CONFIG.controls.confirmation.pedestrian,
+        open_text:
+          ui.controls?.confirmation?.open_text ??
+          DEFAULT_UI_CONFIG.controls.confirmation.open_text,
+        close_text:
+          ui.controls?.confirmation?.close_text ??
+          DEFAULT_UI_CONFIG.controls.confirmation.close_text,
+        pedestrian_text:
+          ui.controls?.confirmation?.pedestrian_text ??
+          DEFAULT_UI_CONFIG.controls.confirmation.pedestrian_text,
+      },
     },
 
     icons: {
