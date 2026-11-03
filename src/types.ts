@@ -104,6 +104,14 @@ export interface CardUiConfig {
     show_close: boolean;
     show_pedestrian: boolean | "auto";
     available_action_tint: boolean;
+    confirmation: {
+      open: boolean;
+      close: boolean;
+      pedestrian: boolean;
+      open_text: string;
+      close_text: string;
+      pedestrian_text: string;
+    };
   };
 
   icons: {
