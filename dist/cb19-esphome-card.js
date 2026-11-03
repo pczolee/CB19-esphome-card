@@ -1218,7 +1218,15 @@ const l = {
     show_stop: !0,
     show_close: !0,
     show_pedestrian: "auto",
-    available_action_tint: !0
+    available_action_tint: !0,
+    confirmation: {
+      open: !1,
+      close: !1,
+      pedestrian: !1,
+      open_text: "Are you sure you want to open the gate?",
+      close_text: "Are you sure you want to close the gate?",
+      pedestrian_text: "Are you sure you want to open the gate in pedestrian mode?"
+    }
   },
   icons: {
     open: "mdi:arrow-expand-horizontal",
@@ -1307,7 +1315,15 @@ function dt(o) {
       show_stop: t.controls?.show_stop ?? l.controls.show_stop,
       show_close: t.controls?.show_close ?? l.controls.show_close,
       show_pedestrian: t.controls?.show_pedestrian ?? l.controls.show_pedestrian,
-      available_action_tint: t.controls?.available_action_tint ?? l.controls.available_action_tint
+      available_action_tint: t.controls?.available_action_tint ?? l.controls.available_action_tint,
+      confirmation: {
+        open: t.controls?.confirmation?.open ?? l.controls.confirmation.open,
+        close: t.controls?.confirmation?.close ?? l.controls.confirmation.close,
+        pedestrian: t.controls?.confirmation?.pedestrian ?? l.controls.confirmation.pedestrian,
+        open_text: t.controls?.confirmation?.open_text ?? l.controls.confirmation.open_text,
+        close_text: t.controls?.confirmation?.close_text ?? l.controls.confirmation.close_text,
+        pedestrian_text: t.controls?.confirmation?.pedestrian_text ?? l.controls.confirmation.pedestrian_text
+      }
     },
     icons: {
       open: t.icons?.open ?? l.icons.open,
@@ -1406,9 +1422,19 @@ let k = class extends z {
       `--cb19-content-gap: ${this._ui.padding.content_gap}`
     ].join("; ");
   }
-  _pressButton(o) {
-    !this.hass || !o || this.hass.callService("button", "press", {
-      entity_id: o
+  _pressAction(o, t) {
+    if (!this.hass || !t)
+      return;
+    if (o !== "stop") {
+      const e = this._ui.controls.confirmation, i = o === "open" ? e.open : o === "close" ? e.close : e.pedestrian;
+      if (i) {
+        const s = o === "open" ? e.open_text : o === "close" ? e.close_text : e.pedestrian_text;
+        if (!window.confirm(s))
+          return;
+      }
+    }
+    this.hass.callService("button", "press", {
+      entity_id: t
     });
   }
   _formatPercent(o) {
@@ -1542,7 +1568,7 @@ let k = class extends z {
     )}
                   style=${this._buttonStyle("open")}
                   title="Open"
-                  @click=${() => this._pressButton(o.openButton)}
+                  @click=${() => this._pressAction("open", o.openButton)}
                 >
                   <ha-icon icon=${this._ui.icons.open}></ha-icon>
                 </button>
@@ -1557,7 +1583,7 @@ let k = class extends z {
     )}
                   style=${this._buttonStyle("stop")}
                   title="Stop"
-                  @click=${() => this._pressButton(o.stopButton)}
+                  @click=${() => this._pressAction("stop", o.stopButton)}
                 >
                   <ha-icon icon=${this._ui.icons.stop}></ha-icon>
                 </button>
@@ -1572,7 +1598,7 @@ let k = class extends z {
     )}
                   style=${this._buttonStyle("close")}
                   title="Close"
-                  @click=${() => this._pressButton(o.closeButton)}
+                  @click=${() => this._pressAction("close", o.closeButton)}
                 >
                   <ha-icon icon=${this._ui.icons.close}></ha-icon>
                 </button>
@@ -1587,7 +1613,7 @@ let k = class extends z {
     )}
                   style=${this._buttonStyle("pedestrian")}
                   title="Pedestrian Open"
-                  @click=${() => this._pressButton(o.pedestrianButton)}
+                  @click=${() => this._pressAction("pedestrian", o.pedestrianButton)}
                 >
                   <ha-icon icon=${this._ui.icons.pedestrian}></ha-icon>
                 </button>
