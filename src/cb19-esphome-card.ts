@@ -71,9 +71,32 @@ export class Cb19GateCard extends LitElement {
     ].join("; ");
   }
 
-  private _pressButton(entityId: string): void {
+  private _pressAction(action: ControlName, entityId: string): void {
     if (!this.hass || !entityId) {
       return;
+    }
+
+    if (action !== "stop") {
+      const confirmation = this._ui.controls.confirmation;
+      const enabled =
+        action === "open"
+          ? confirmation.open
+          : action === "close"
+            ? confirmation.close
+            : confirmation.pedestrian;
+
+      if (enabled) {
+        const message =
+          action === "open"
+            ? confirmation.open_text
+            : action === "close"
+              ? confirmation.close_text
+              : confirmation.pedestrian_text;
+
+        if (!window.confirm(message)) {
+          return;
+        }
+      }
     }
 
     this.hass.callService("button", "press", {
@@ -313,7 +336,7 @@ export class Cb19GateCard extends LitElement {
                   )}
                   style=${this._buttonStyle("open")}
                   title="Open"
-                  @click=${() => this._pressButton(entities.openButton)}
+                  @click=${() => this._pressAction("open", entities.openButton)}
                 >
                   <ha-icon icon=${this._ui.icons.open}></ha-icon>
                 </button>
@@ -330,7 +353,7 @@ export class Cb19GateCard extends LitElement {
                   )}
                   style=${this._buttonStyle("stop")}
                   title="Stop"
-                  @click=${() => this._pressButton(entities.stopButton)}
+                  @click=${() => this._pressAction("stop", entities.stopButton)}
                 >
                   <ha-icon icon=${this._ui.icons.stop}></ha-icon>
                 </button>
@@ -347,7 +370,7 @@ export class Cb19GateCard extends LitElement {
                   )}
                   style=${this._buttonStyle("close")}
                   title="Close"
-                  @click=${() => this._pressButton(entities.closeButton)}
+                  @click=${() => this._pressAction("close", entities.closeButton)}
                 >
                   <ha-icon icon=${this._ui.icons.close}></ha-icon>
                 </button>
@@ -364,7 +387,7 @@ export class Cb19GateCard extends LitElement {
                   )}
                   style=${this._buttonStyle("pedestrian")}
                   title="Pedestrian Open"
-                  @click=${() => this._pressButton(entities.pedestrianButton)}
+                  @click=${() => this._pressAction("pedestrian", entities.pedestrianButton)}
                 >
                   <ha-icon icon=${this._ui.icons.pedestrian}></ha-icon>
                 </button>
